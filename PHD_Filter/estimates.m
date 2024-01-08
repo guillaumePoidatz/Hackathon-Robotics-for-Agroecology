@@ -7,5 +7,5 @@ function objects = estimates(ws, hyps)
   %%
   %% WARNING !! Note that we only return the positions (x, y) of the targets, not the other variables of the state vectors
 
-  objects = ...;
+  objects = ;
 endfunction

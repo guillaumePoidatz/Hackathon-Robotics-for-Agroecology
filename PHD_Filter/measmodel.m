@@ -8,17 +8,11 @@ function [z_hat, H] = measmodel(hyp)
   %% - z_hat the expected measurement of size (measurement_size, 1)
   %% - H the associated Jacobian matrix of size (measurement_size, state_size)
 
-  % Use dark magic to split array into variables
-  [x, y, theta, v] = feval(@(x)x{:}, num2cell(hyp.x));
-  
-  % H matrix (jacobian of the observation model)
-  H = [x/sqrt(x^2+y^2),y/sqrt(x^2+y^2),0,0;...
-      -y/(x^2+x*y),1/(x+y),0,0];
-
   % Expected measurement
   % size of 2*1 (2 measurements)
-  z_hat = H*[x,y,theta,v]';
+  z_hat = [sqrt(hyp.x^2+hyp.y^2),atan2(hyp.y,hyp.x)];
 
-  % Jacobian Matrix
-  H = ...
-endfunction
+  % H matrix (jacobian of the observation model)
+  H = [hyp.x/sqrt(hyp.x^2+hyp.y^2),hyp.y/sqrt(hyp.x^2+hyp.y^2),0,0;...
+      -hyp.y/(hyp.x^2+hyp.x*hyp.y),1/(hyp.x+hyp.y),0,0];
+end

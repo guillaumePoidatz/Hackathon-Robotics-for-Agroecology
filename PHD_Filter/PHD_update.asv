@@ -13,39 +13,31 @@ function [ws, hyps] = PHD_update(ws, hyps, obs, R, PD, intensity_c)
     return;
   end
 
-  numberOfhyps = length(hyps);
   % first update step
-  for khyp=1:numberOfhyps
-      hyps(khyp).ws = log(1-PD)+hyps(khyp).ws;
-  end
+  ws = (1-PD)ws
+  hyps = hyps
 
   % second update step
+  numberOfhyps = length(hyps);
   for khyp=1:numberOfhyps
       % Use dark magic to split array into variables
       [x, y, theta, v] = feval(@(x)x{:}, num2cell(hyps(khyp).x));
       H = [x/sqrt(x^2+y^2),y/sqrt(x^2+y^2),0,0;-y/(x^2+x*y),1/(x+y),0,0];
       hyps(khyp).z_hat = H*[x, y, theta, v]';
-      S = R + H*hyps(khyp).P*H';
-      hyps(khyp).K = hyps(khyp).P*H'*inv(S);
+      S = R + H*P*H';
+      K = P*H'*inv(S);
       hyps(khyp).P = (eye(2)-K*H)*hyps(khyp).P;
   end
 
   % third update step
-  m_k = length(obs);
   for i=1:m_k
       for khyp=1:numberOfhyps
           % Use dark magic to split array into variables
           [x, y, theta, v] = feval(@(x)x{:}, num2cell(hyps(khyp).x));
-          X = [x, y, theta, v]';
-          X = X+hyps(khyp).K*(z-hyps(khyp).z_hat);
+          [x, y, theta, v]' = [x, y, theta, v]'+K*(z-hyps(khyp).z_hat)
           ws = ws + log(PD) + log();
-
-          hyps(khyp).x = X(1);
-          hyps(khyp).y = X(2);
-          hyps(khyp).theta = X(3);
-          hyps(khyp).v = X(4);
       end
-      % normalization
+      % normali
       for khyp=1:numberOfhyps
           ws = logsumexp((log(intensity_c),));
       end

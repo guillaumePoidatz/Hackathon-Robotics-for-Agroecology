@@ -46,9 +46,9 @@ for step = 1:NB_STEPS
   [ws, hyps] = PHD_predict(ws, gt{step,:}, dt, Q, PS);
 
   % 2. Correction step
-  [ws, hyps] = PHD_update(ws, hyps, obs, R, PD, intensity_c);
   obs = all_obs{step};
-
+  [ws, hyps] = PHD_update(ws, hyps, obs, R, PD, intensity_c);
+  
   % 3. Mixture Reduction
 
   % Display debug information
