@@ -8,11 +8,9 @@ function [z_hat, H] = measmodel(hyp)
   %% - z_hat the expected measurement of size (measurement_size, 1)
   %% - H the associated Jacobian matrix of size (measurement_size, state_size)
 
-  % Expected measurement
-  % size of 2*1 (2 measurements)
-  z_hat = [sqrt(hyp.x^2+hyp.y^2),atan2(hyp.y,hyp.x)];
+  z_hat = [sqrt(hyp.x(1,1)^2+hyp.x(2,1)^2),atan2(hyp.x(2,1),hyp.x(1,1))];
 
   % H matrix (jacobian of the observation model)
-  H = [hyp.x/sqrt(hyp.x^2+hyp.y^2),hyp.y/sqrt(hyp.x^2+hyp.y^2),0,0;...
-      -hyp.y/(hyp.x^2+hyp.x*hyp.y),1/(hyp.x+hyp.y),0,0];
+  H = [hyp.x(1,1)/sqrt(hyp.x(1,1)^2+hyp.x(2,1)^2),hyp.x(2,1)/sqrt(hyp.x(1,1)^2+hyp.x(2,1)^2),0,0;...
+      -hyp.x(2,1)/(hyp.x(1,1)^2+hyp.x(1,1)*hyp.x(2,1)),1/(hyp.x(1,1)+hyp.x(2,1)),0,0];
 end

@@ -14,16 +14,23 @@ function [ws, hyps] = birthmodel(obs, birth_weight, R)
 
   % Empty struct to add the hypotheses to
   hyps = struct([]);
+  ws = [];
 
   % For each measurement
   for i = 1:mk
-    hyp = struct;
-    hyp.x = ...
+      % inversion of the observation model + some assumptions on theta and
+      % v
+      if cos(obs(2,i))>0
+          pos_x = sqrt(obs(1,i)^2*(1+tan(obs(2,i))^2)^-1);
+      else
+          pos_x = -sqrt(obs(1,i)^2*(1+tan(obs(2,i))^2)^-1);
+      end
 
-    hyp.P = ...;
+      hyps(i).x = [pos_x;tan(obs(2,i))*pos_x;pi()-obs(2,i);1.31];
+      hyps(i).P = diag([25,25,pi()^2,1]); % no intercorrelation at the beginning (before update)
+      % very high variances for velocity and pose of the pedestrian as
+      % precised in the report. Vxx and Vyy are a first random estimation
 
-    hyps = [hyps, hyp];
-  endfor
-
-  ws = ...;
-endfunction
+      ws = [ws,birth_weight];
+  end
+end

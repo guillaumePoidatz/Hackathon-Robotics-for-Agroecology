@@ -11,7 +11,7 @@ function e = err(z, z_hat)
     a = a + 2*pi;
   elseif (a - b) > pi
     a = a - 2*pi;
-  endif
+  end
 
   % a is the new difference between angles
   e = z - z_hat;

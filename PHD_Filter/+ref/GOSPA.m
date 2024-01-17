@@ -9,11 +9,11 @@ function value = GOSPA(x, y, c)
   if size(x, 2) == 0
     value = c / 2 * size(y, 2);
     return;
-  endif
+  end
   if size(y, 2) == 0
     value = c / 2 * size(x, 2);
     return;
-  endif
+  end
 
   % Create the cost matrix using the euclidian distance
   D = zeros(size(x, 2), size(y, 2));
@@ -28,10 +28,10 @@ function value = GOSPA(x, y, c)
       % If it is > than c, then the association is not possible
       if d > c
         d = Inf;
-      endif
+      end
       D(i, j) = d;
-    endfor
-  endfor
+    end
+  end
 
   % Using this cost matrix, get the best assignment possible
   [assign, cost] = ref.munkres(D);

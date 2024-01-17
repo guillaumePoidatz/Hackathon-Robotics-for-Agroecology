@@ -1,12 +1,13 @@
 function [ws, states] = reduction(ws, states, prune_threshold, nmax)
   if length(ws) == 0
     return;
-  endif
+  end
 
   % Save total weight for re-normalization
   wsum = ref.logsumexp(ws);
 
   % 1. Pruning : remove hypotheses wth weight < prune threshold
+  % we need abs for the no noise case
   filter = ws > prune_threshold;
   ws = ws(filter);
   states = states(filter);
@@ -21,5 +22,5 @@ function [ws, states] = reduction(ws, states, prune_threshold, nmax)
     idx = idx(1:nmax);
     ws = ws(idx);
     states = states(idx);
-  endif
-endfunction
+  end
+end

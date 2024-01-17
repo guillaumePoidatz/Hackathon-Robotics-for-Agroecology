@@ -7,5 +7,11 @@ function objects = estimates(ws, hyps)
   %%
   %% WARNING !! Note that we only return the positions (x, y) of the targets, not the other variables of the state vectors
 
-  objects = ;
-endfunction
+  if ~isempty(hyps)
+      for kObject=1:length(hyps)% expectedNumberOfObjects
+          objects(:,kObject) = hyps(kObject).x(1:2);
+      end
+  else
+      objects = [1;1];
+  end
+end

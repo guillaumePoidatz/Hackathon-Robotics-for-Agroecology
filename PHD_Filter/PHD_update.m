@@ -13,42 +13,45 @@ function [ws, hyps] = PHD_update(ws, hyps, obs, R, PD, intensity_c)
     return;
   end
 
-  numberOfhyps = length(hyps);
+  numberOfhyps = length(ws);
   % first update step
   for khyp=1:numberOfhyps
-      hyps(khyp).ws = log(1-PD)+hyps(khyp).ws;
+      ws(khyp) = log(1-PD)+ ws(khyp);
   end
 
+  z_hat=[];
+  S = cell(1,numberOfhyps);
+  K = cell(1,numberOfhyps);
   % second update step
   for khyp=1:numberOfhyps
-      % Use dark magic to split array into variables
-      [x, y, theta, v] = feval(@(x)x{:}, num2cell(hyps(khyp).x));
-      H = [x/sqrt(x^2+y^2),y/sqrt(x^2+y^2),0,0;-y/(x^2+x*y),1/(x+y),0,0];
-      hyps(khyp).z_hat = H*[x, y, theta, v]';
-      S = R + H*hyps(khyp).P*H';
-      hyps(khyp).K = hyps(khyp).P*H'*inv(S);
-      hyps(khyp).P = (eye(2)-K*H)*hyps(khyp).P;
+      [z_hat(:,khyp), H] = measmodel(hyps(khyp));
+      S{khyp} = R + H*hyps(khyp).P*H';
+      K{khyp} = hyps(khyp).P*H'*inv(S{khyp});
+      hyps(khyp).P = (eye(4)-K{khyp}*H)*hyps(khyp).P;
   end
 
   % third update step
-  m_k = length(obs);
-  for i=1:m_k
+  m_k = size(obs,2);
+  for i_obs=1:m_k
       for khyp=1:numberOfhyps
           % Use dark magic to split array into variables
           [x, y, theta, v] = feval(@(x)x{:}, num2cell(hyps(khyp).x));
           X = [x, y, theta, v]';
-          X = X+hyps(khyp).K*(z-hyps(khyp).z_hat);
-          ws = ws + log(PD) + log();
-
-          hyps(khyp).x = X(1);
-          hyps(khyp).y = X(2);
-          hyps(khyp).theta = X(3);
-          hyps(khyp).v = X(4);
+          
+          innovation=ref.err(obs(:,i_obs),z_hat(:,khyp));
+          X = X+K{khyp}*innovation;
+          hyps(i_obs*numberOfhyps+khyp).x = [X(1);X(2);X(3);X(4)];
+          
+          ws(i_obs*numberOfhyps+khyp) = ws(khyp) + log(PD) + ref.logmvnpdf(obs(:,i_obs)',z_hat(:,khyp)',S{khyp}');
       end
       % normalization
       for khyp=1:numberOfhyps
-          ws = logsumexp((log(intensity_c),));
+          ws(i_obs*numberOfhyps+khyp) = ws(i_obs*numberOfhyps+khyp)-ref.logsumexp([log(intensity_c),ws(i_obs*numberOfhyps+1:i_obs*numberOfhyps+numberOfhyps)]);
       end
   end
 
+  % Normalize weights (convert from log scale)
+  % we have to cancel this line for the no noise case (the practice show
+  % that but i don't know why)
+  ws = exp(ws);
 end
