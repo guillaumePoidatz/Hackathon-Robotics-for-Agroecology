@@ -26,6 +26,7 @@ function [ws, hyps] = birthmodel(obs, birth_weight, R)
           pos_x = -sqrt(obs(1,i)^2*(1+tan(obs(2,i))^2)^-1);
       end
 
+      % the birth model for theta is explained inside the reports
       hyps(i).x = [pos_x;tan(obs(2,i))*pos_x;pi()-obs(2,i);1.31];
       hyps(i).P = diag([25,25,pi()^2,1]); % no intercorrelation at the beginning (before update)
       % very high variances for velocity and pose of the pedestrian as

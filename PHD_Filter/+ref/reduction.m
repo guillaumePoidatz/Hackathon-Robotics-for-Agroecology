@@ -7,7 +7,6 @@ function [ws, states] = reduction(ws, states, prune_threshold, nmax)
   wsum = ref.logsumexp(ws);
 
   % 1. Pruning : remove hypotheses wth weight < prune threshold
-  % we need abs for the no noise case
   filter = ws > prune_threshold;
   ws = ws(filter);
   states = states(filter);

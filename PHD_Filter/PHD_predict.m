@@ -14,9 +14,16 @@ function [ws, hyps] = PHD_predict(ws, hyps, dt, Q, PS)
 
   numberOfHyps = length(ws);
   for kHyp=1:numberOfHyps
+      hyps(kHyp) = hyps(kHyp);
+      ws(kHyp) = ws(kHyp);
+  end
+
+  for kHyp=1:numberOfHyps
       % EKF for each hypothesis
       hyp = EKF_predict(hyps(kHyp), dt, Q);
-      ws(kHyp) = ws(kHyp) + log(PS);
-      hyps(kHyp) = hyp;
+      % we have to take into account that a pedestrian can survive or not
+      % (disappear from the sensor range). This is done by PS
+      ws(kHyp+numberOfHyps) = ws(kHyp) + log(PS);
+      hyps(kHyp+numberOfHyps) = hyp;
   end
 end
