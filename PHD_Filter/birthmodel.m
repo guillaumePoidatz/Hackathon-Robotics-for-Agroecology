@@ -20,6 +20,8 @@ function [ws, hyps] = birthmodel(obs, birth_weight, R)
   for i = 1:mk
       % inversion of the observation model + some assumptions on theta and
       % v
+      uncertainty_x = sqrt(R(1,1)^2*(1+tan(R(2,2))^2)^-1);
+      uncertainty_y = abs(tan(obs(2,i))*uncertainty_x);
       if cos(obs(2,i))>0
           pos_x = sqrt(obs(1,i)^2*(1+tan(obs(2,i))^2)^-1);
       else
@@ -28,7 +30,7 @@ function [ws, hyps] = birthmodel(obs, birth_weight, R)
 
       % the birth model for theta is explained inside the reports
       hyps(i).x = [pos_x;tan(obs(2,i))*pos_x;pi()-obs(2,i);1.31];
-      hyps(i).P = diag([25,25,pi()^2,1]); % no intercorrelation at the beginning (before update)
+      hyps(i).P = diag([uncertainty_x,uncertainty_y,pi()^2,1]); % no intercorrelation at the beginning (before update)
       % very high variances for velocity and pose of the pedestrian as
       % precised in the report. Vxx and Vyy are a first random estimation
 

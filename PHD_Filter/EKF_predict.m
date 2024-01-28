@@ -19,7 +19,10 @@ function hyp = EKF_predict(hyp, dt, Q)
 
   % Predict the state
   X = F*[x, y, theta, v]';
-  hyp.x = [X(1);X(2);X(3);X(4)];
+  hyp.x = [x + v*dt*cos(theta),
+           y + v*dt*sin(theta),
+           theta,
+           v];
   
   % Predict the covariance
   hyp.P = F*hyp.P*F'+Q; % cov matrix of the prediction (Pk|k-1)

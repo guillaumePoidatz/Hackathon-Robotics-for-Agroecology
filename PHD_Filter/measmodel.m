@@ -13,5 +13,5 @@ function [z_hat, H] = measmodel(hyp)
 
   % H matrix (jacobian of the observation model)
   H = [hyp.x(1,1)/sqrt(hyp.x(1,1)^2+hyp.x(2,1)^2),hyp.x(2,1)/sqrt(hyp.x(1,1)^2+hyp.x(2,1)^2),0,0;...
-      -hyp.x(2,1)/(hyp.x(1,1)^2+hyp.x(1,1)*hyp.x(2,1)),1/(hyp.x(1,1)+hyp.x(2,1)),0,0];
+      -hyp.x(2,1)/(hyp.x(1,1)^2+hyp.x(2,1)^2),hyp.x(1,1)/(hyp.x(1,1)^2+hyp.x(2,1)^2),0,0];
 end

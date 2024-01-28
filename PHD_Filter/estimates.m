@@ -7,9 +7,13 @@ function objects = estimates(ws, hyps)
   %%
   %% WARNING !! Note that we only return the positions (x, y) of the targets, not the other variables of the state vectors
 
-  if ~isempty(hyps)
-      for kObject=1:length(hyps)% expected Number Of Objects
-          objects(:,kObject) = hyps(kObject).x(1:2);
+  ws = exp(ws);
+  expectedNumberOfObjects = ceil(sum(ws));
+  if expectedNumberOfObjects~=0
+      % we select only the most releavant hypothesis
+      [~, sortedIndices] = sort(ws, 'descend');
+      for kObject=1:expectedNumberOfObjects
+          objects(:,kObject) = hyps(sortedIndices(kObject)).x(1:2);
       end
   else
       % to just avoid an error of empty array in the following steps after

@@ -1,10 +1,12 @@
-function value = GOSPA(x, y, c)
+function [value, assign] = GOSPA(x, y, c)
   %%% Computes the GOSPA between the matrices x and y (representing sets) using threshold c on euclidian distance
   %% - x matrix of size (2, nb_x)
   %% - y matrix of size (2, nb_y)
   %% - c scalar
   %%
   %%% Returns the value of the gospa
+
+  assign = [];
 
   if size(x, 2) == 0
     value = c / 2 * size(y, 2);
@@ -30,8 +32,8 @@ function value = GOSPA(x, y, c)
         d = Inf;
       end
       D(i, j) = d;
-    end
-  end
+      end
+      end
 
   % Using this cost matrix, get the best assignment possible
   [assign, cost] = ref.munkres(D);

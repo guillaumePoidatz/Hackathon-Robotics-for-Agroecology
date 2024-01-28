@@ -13,10 +13,6 @@ function [ws, hyps] = PHD_predict(ws, hyps, dt, Q, PS)
   %% - hyps the predicted hypotheses
 
   numberOfHyps = length(ws);
-  for kHyp=1:numberOfHyps
-      hyps(kHyp) = hyps(kHyp);
-      ws(kHyp) = ws(kHyp);
-  end
 
   for kHyp=1:numberOfHyps
       % EKF for each hypothesis

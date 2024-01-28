@@ -1,4 +1,4 @@
-function [ws, states] = reduction(ws, states, prune_threshold, nmax)
+function [ws, states] = reduction(ws, states, prune_threshold, merge_threshold, nmax)
   if length(ws) == 0
     return;
   end
@@ -12,7 +12,7 @@ function [ws, states] = reduction(ws, states, prune_threshold, nmax)
   states = states(filter);
 
   % 2. Merging : merge hypotheses that are close enought from each other
-  % [ws, states] = ref.gaussianMerging(ws, states, merge_threshold);
+  %[ws, states] = ref.gaussianMerging(ws, states, merge_threshold);
 
   % 3. Capping : keep the nmax most probable associations
   if length(ws) > nmax
