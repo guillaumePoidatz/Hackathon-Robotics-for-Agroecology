@@ -22,7 +22,7 @@ All the environment and sensors are provided on ros2/Gazebo
 The focus will be on the blue square below :
 <img width="732" alt="Capture d’écran 2023-12-16 à 20 45 02" src="https://github.com/guillaumePoidatz/Hackathon-Robotics-for-Agroecology/assets/79081686/8839070d-bce7-416d-afe7-6f6c4af8a398">
 
-The mobile robot into gazebo is the adap2e robot below. It is a mobile robot with 4 drive and steering wheels. The available sensors are :
+The mobile robot into gazebo is the adapte robot below. It is a mobile robot with 4 drive and steering wheels. The available sensors are :
 - GPS,
 - IMU (inertial measurement unit for the acceleration and the angular velocity),
 - Lidar,
